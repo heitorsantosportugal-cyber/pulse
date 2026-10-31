@@ -215,15 +215,10 @@ main{padding:18px 13px 145px}.feature-grid{grid-template-columns:repeat(2,1fr)}
    <button class="filter" onclick="filterTracks('activities',this)">Focus</button>
   </div>
  <div style="margin-bottom:16px">
-  <input id="folder-picker" type="file" webkitdirectory multiple accept="audio/*,.mp3" style="display:none">
-  <button class="btn" onclick="document.getElementById('folder-picker').click()">
-    📂 Select Open Lo-Fi folder
-  </button>
-  <p style="font-size:10px;color:var(--muted);margin-top:9px">
-    Select the openlofi folder to load your local music.
+  <p style="font-size:11px;color:var(--muted)">
+    ✦ PULSE ONLINE LIBRARY · 50 TRACKS
   </p>
-</div>
-<div class="track-list" id="track-list"> </div>
+</div><div class="track-list" id="track-list"> </div>
  <div class="music-section">
   <div class="music-section-head"><h2>Made for your favourites ♥</h2><span>YOUR SAVED TRACKS</span></div>
   <div id="favorites-list" class="track-list"><div class="empty-state">Tap the heart on any track to save it here.</div></div>
@@ -331,74 +326,106 @@ function addNote(){
 }
 renderNotes();
 
-// LOCAL MUSIC LIBRARY — PULSE
+// ONLINE MUSIC LIBRARY — PULSE
 let tracks = [];
 let visibleTracks = [];
 let currentIndex = -1;
 let activeFilter = 'all';
 let shuffle = false;
 let repeat = false;
+
 const audio = document.getElementById('audio');
 
-const folderPicker = document.getElementById('folder-picker');
+// Public GitHub repository
+const MUSIC_API =
+  'https://api.github.com/repos/heitorsantosportugal-cyber/pulse/contents/openlofi';
 
-folderPicker.addEventListener('change', function(e) {
-  const files = Array.from(e.target.files)
-    .filter(file => file.name.toLowerCase().endsWith('.mp3'))
-    .sort((a, b) => a.name.localeCompare(b.name));
+async function loadOnlineMusic() {
+  const status = document.getElementById('music-status');
+  const libraryCount = document.getElementById('library-count');
 
-  if (!files.length) {
-    toast('No MP3 files found in that folder.');
-    return;
-  }
+  status.textContent = 'Connecting to PULSE online library...';
+  libraryCount.textContent = 'Loading music collection...';
 
-  if (audio.src.startsWith('blob:')) {
-    URL.revokeObjectURL(audio.src);
-  }
+  try {
+    const response = await fetch(MUSIC_API);
 
-  tracks = files.map(file => {
-    const title = file.name
-      .replace(/\.mp3$/i, '')
-      .replace(/[-_]/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase());
-
-    const name = file.name.toLowerCase();
-
-    let category = 'chillhop';
-
-    if (/soul|rnb|slow|warm|honey|love/.test(name)) {
-      category = 'soul-rnb';
-    } else if (/night|midnight|3am|late|window/.test(name)) {
-      category = 'late-night';
-    } else if (/ambient|float|space|dream|fog|drift|cloud/.test(name)) {
-      category = 'ambient-lofi';
-    } else if (/focus|study|work|reading|activity/.test(name)) {
-      category = 'activities';
+    if (!response.ok) {
+      throw new Error('Unable to access the music repository.');
     }
 
-    return {
-      title,
-      filename: file.name,
-      category,
-      file,
-      url: URL.createObjectURL(file)
-    };
-  });
+    const files = await response.json();
 
-  currentIndex = -1;
+    const mp3Files = files
+      .filter(file =>
+        file.type === 'file' &&
+        file.name.toLowerCase().endsWith('.mp3')
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
 
-  document.getElementById('music-count').textContent = tracks.length;
-  document.getElementById('library-count').textContent =
-    tracks.length + ' local tracks available';
+    if (!mp3Files.length) {
+      throw new Error('No MP3 files found in openlofi.');
+    }
 
-  document.getElementById('music-status').textContent =
-    'LOCAL LIBRARY CONNECTED · ' + tracks.length + ' MP3 TRACKS';
+    tracks = mp3Files.map(file => {
+      const filename = file.name;
+      const name = filename.toLowerCase();
 
-  renderTracks();
-  renderFavorites();
+      const title = filename
+        .replace(/\.mp3$/i, '')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
 
-  toast(tracks.length + ' songs loaded successfully!');
-});
+      let category = 'chillhop';
+
+      if (/soul|rnb|slow|warm|honey|love/.test(name)) {
+        category = 'soul-rnb';
+      } else if (/night|midnight|3am|late|window/.test(name)) {
+        category = 'late-night';
+      } else if (/ambient|float|space|dream|fog|drift|cloud/.test(name)) {
+        category = 'ambient-lofi';
+      } else if (/focus|study|work|reading|activity/.test(name)) {
+        category = 'activities';
+      }
+
+      return {
+        title,
+        filename,
+        category,
+        url: './openlofi/' + encodeURIComponent(filename)
+      };
+    });
+
+    currentIndex = -1;
+
+    document.getElementById('music-count').textContent = tracks.length;
+    libraryCount.textContent =
+      tracks.length + ' online tracks available';
+
+    status.textContent =
+      'PULSE ONLINE LIBRARY CONNECTED · ' +
+      tracks.length +
+      ' MP3 TRACKS · CC0';
+
+    renderTracks();
+    renderFavorites();
+
+    toast(tracks.length + ' tracks loaded successfully!');
+
+  } catch (error) {
+    console.error('PULSE music error:', error);
+
+    libraryCount.textContent = 'Music library unavailable';
+
+    status.textContent =
+      'Unable to load music. Check the repository and try again.';
+
+    document.getElementById('track-list').innerHTML =
+      '<div class="empty-state">Could not connect to the online music library. Please try again later.</div>';
+
+    toast('Could not load online music.');
+  }
+}
 
 function categoryName(c) {
   const names = {
@@ -408,6 +435,7 @@ function categoryName(c) {
     'chillhop': 'Chillhop',
     'activities': 'Focus'
   };
+
   return names[c] || 'Lo-fi';
 }
 
@@ -421,25 +449,34 @@ function trackIcon(c) {
 }
 
 function renderTracks() {
-  const query = document.getElementById('music-search').value.toLowerCase();
+  const query = document
+    .getElementById('music-search')
+    .value.toLowerCase();
 
-  visibleTracks = tracks.map((t, i) => ({...t, index:i})).filter(t =>
-    (activeFilter === 'all' || t.category === activeFilter) &&
-    (t.title.toLowerCase().includes(query) ||
-     categoryName(t.category).toLowerCase().includes(query))
-  );
+  visibleTracks = tracks
+    .map((t, i) => ({...t, index:i}))
+    .filter(t =>
+      (activeFilter === 'all' || t.category === activeFilter) &&
+      (
+        t.title.toLowerCase().includes(query) ||
+        categoryName(t.category).toLowerCase().includes(query)
+      )
+    );
 
   const box = document.getElementById('track-list');
   box.innerHTML = '';
 
   if (!visibleTracks.length) {
-    box.innerHTML = '<div class="empty-state">No tracks found. Load your music folder first.</div>';
+    box.innerHTML =
+      '<div class="empty-state">No tracks found.</div>';
     return;
   }
 
   visibleTracks.forEach((t, i) => {
     const row = document.createElement('div');
-    row.className = 'track' + (currentIndex === t.index ? ' playing' : '');
+
+    row.className =
+      'track' + (currentIndex === t.index ? ' playing' : '');
 
     const number = document.createElement('div');
     number.className = 'track-number';
@@ -457,17 +494,24 @@ function renderTracks() {
 
     const meta = document.createElement('div');
     meta.className = 'track-meta';
-    meta.textContent = categoryName(t.category) + ' · LOCAL MP3';
+    meta.textContent = categoryName(t.category) + ' · ONLINE MP3';
 
     info.append(name, meta);
 
     const play = document.createElement('button');
     play.className = 'track-play';
-    play.textContent = currentIndex === t.index && !audio.paused ? 'Ⅱ' : '▶';
-    play.onclick = () => currentIndex === t.index ? togglePlay() : playTrack(t.index);
+    play.textContent =
+      currentIndex === t.index && !audio.paused ? 'Ⅱ' : '▶';
+
+    play.onclick = () =>
+      currentIndex === t.index
+        ? togglePlay()
+        : playTrack(t.index);
 
     const fav = document.createElement('button');
-    fav.className = 'track-fav' + (isFav(t.title) ? ' liked' : '');
+    fav.className =
+      'track-fav' + (isFav(t.title) ? ' liked' : '');
+
     fav.textContent = '♥';
     fav.onclick = () => toggleFav(t.title);
 
@@ -479,12 +523,18 @@ function renderTracks() {
 function filterTracks(filter, el) {
   activeFilter = filter;
 
-  document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.playlist-card').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.filter')
+    .forEach(b => b.classList.remove('active'));
+
+  document.querySelectorAll('.playlist-card')
+    .forEach(b => b.classList.remove('selected'));
 
   if (el) {
-    if (el.classList.contains('playlist-card')) el.classList.add('selected');
-    else el.classList.add('active');
+    if (el.classList.contains('playlist-card')) {
+      el.classList.add('selected');
+    } else {
+      el.classList.add('active');
+    }
   }
 
   renderTracks();
@@ -495,26 +545,40 @@ function playTrack(index) {
   if (index < 0 || index >= tracks.length) return;
 
   currentIndex = index;
+
   const t = tracks[index];
 
   audio.src = t.url;
   audio.load();
 
-  audio.play().then(() => {
-    document.getElementById('now-title').textContent = t.title;
-    document.getElementById('now-sub').textContent = categoryName(t.category) + ' · PULSE';
-    document.getElementById('mini-art').textContent = trackIcon(t.category);
-    document.getElementById('play-button').textContent = 'Ⅱ';
+  audio.play()
+    .then(() => {
+      document.getElementById('now-title').textContent = t.title;
 
-    renderTracks();
-    renderFavorites();
-  }).catch(() => toast('Unable to play this track.'));
+      document.getElementById('now-sub').textContent =
+        categoryName(t.category) + ' · PULSE';
+
+      document.getElementById('mini-art').textContent =
+        trackIcon(t.category);
+
+      document.getElementById('play-button').textContent = 'Ⅱ';
+
+      renderTracks();
+      renderFavorites();
+    })
+    .catch(error => {
+      console.error('Audio playback error:', error);
+      toast('Unable to play this track.');
+    });
 }
 
 function togglePlay() {
   if (currentIndex < 0) {
-    if (tracks.length) playTrack(0);
-    else toast('Select your music folder first.');
+    if (tracks.length) {
+      playTrack(0);
+    } else {
+      toast('Music library is still loading.');
+    }
     return;
   }
 
@@ -530,7 +594,7 @@ function togglePlay() {
 function nextTrack() {
   if (!tracks.length) return;
 
-  let next = shuffle
+  const next = shuffle
     ? Math.floor(Math.random() * tracks.length)
     : (currentIndex + 1) % tracks.length;
 
@@ -545,20 +609,26 @@ function previousTrack() {
     return;
   }
 
-  playTrack((currentIndex - 1 + tracks.length) % tracks.length);
+  playTrack(
+    (currentIndex - 1 + tracks.length) % tracks.length
+  );
 }
 
 function toggleShuffle() {
   shuffle = !shuffle;
+
   document.getElementById('shuffle').style.color =
     shuffle ? '#bba6ff' : '#c6c7d3';
+
   toast(shuffle ? 'Shuffle on' : 'Shuffle off');
 }
 
 function toggleRepeat() {
   repeat = !repeat;
+
   document.getElementById('repeat').style.color =
     repeat ? '#bba6ff' : '#c6c7d3';
+
   toast(repeat ? 'Repeat on' : 'Repeat off');
 }
 
@@ -586,14 +656,19 @@ audio.addEventListener('timeupdate', () => {
 
   if (audio.duration) {
     seek.value = audio.currentTime / audio.duration * 100;
-    document.getElementById('current-time').textContent = formatTime(audio.currentTime);
-    document.getElementById('duration').textContent = formatTime(audio.duration);
+
+    document.getElementById('current-time').textContent =
+      formatTime(audio.currentTime);
+
+    document.getElementById('duration').textContent =
+      formatTime(audio.duration);
   }
 });
 
 document.getElementById('seek').addEventListener('input', e => {
   if (audio.duration) {
-    audio.currentTime = Number(e.target.value) / 100 * audio.duration;
+    audio.currentTime =
+      Number(e.target.value) / 100 * audio.duration;
   }
 });
 
@@ -605,12 +680,15 @@ audio.volume = 0.8;
 
 function formatTime(s) {
   if (!Number.isFinite(s)) return '0:00';
+
   return Math.floor(s / 60) + ':' +
     String(Math.floor(s % 60)).padStart(2, '0');
 }
 
 // FAVOURITES
-let favorites = JSON.parse(localStorage.getItem('pulse-favorites') || '[]');
+let favorites = JSON.parse(
+  localStorage.getItem('pulse-favorites') || '[]'
+);
 
 function isFav(title) {
   return favorites.includes(title);
@@ -621,7 +699,11 @@ function toggleFav(title) {
     ? favorites.filter(x => x !== title)
     : [...favorites, title];
 
-  localStorage.setItem('pulse-favorites', JSON.stringify(favorites));
+  localStorage.setItem(
+    'pulse-favorites',
+    JSON.stringify(favorites)
+  );
+
   renderTracks();
   renderFavorites();
 }
@@ -630,11 +712,13 @@ function renderFavorites() {
   const box = document.getElementById('favorites-list');
   box.innerHTML = '';
 
-  const list = tracks.map((t, i) => ({...t, index:i}))
+  const list = tracks
+    .map((t, i) => ({...t, index:i}))
     .filter(t => isFav(t.title));
 
   if (!list.length) {
-    box.innerHTML = '<div class="empty-state">Tap the heart on any track to save it here.</div>';
+    box.innerHTML =
+      '<div class="empty-state">Tap the heart on any track to save it here.</div>';
     return;
   }
 
@@ -672,6 +756,9 @@ function renderFavorites() {
     box.append(row);
   });
 }
+
+// Load the public music collection
+loadOnlineMusic();
 
 // VISUAL LAB
 const palettes=[
