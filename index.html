@@ -1,0 +1,769 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PULSE — Your Digital Life</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#090a10;--panel:#12141e;--panel2:#1b1e2b;--text:#f5f5fb;--muted:#85899d;--purple:#9875ff;--border:#ffffff10}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;min-height:100vh}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:230px;background:#0d0e16;border-right:1px solid var(--border);padding:26px 16px;position:fixed;height:100vh;z-index:5;display:flex;flex-direction:column}
+.logo{font-size:25px;font-weight:800;letter-spacing:5px;padding:10px 12px 38px}
+.logo span{color:var(--purple)}
+.side-label{font-size:10px;color:#656a7f;letter-spacing:2px;padding:12px}
+.nav{display:flex;flex-direction:column;gap:7px}
+.nav button{background:none;border:0;color:var(--muted);padding:13px;border-radius:11px;text-align:left;font-size:13px;display:flex;gap:13px;align-items:center}
+.nav button:hover,.nav button.active{background:#9875ff18;color:#bba6ff}
+.nav button.active{box-shadow:inset 3px 0 var(--purple)}
+.ico{font-size:18px;width:20px;text-align:center}
+.side-bottom{margin-top:auto;padding:14px;color:var(--muted);font-size:10px;line-height:2}
+.online{color:#69e7a1}
+main{margin-left:230px;width:calc(100% - 230px);padding:30px 5% 125px;max-width:1700px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}
+.greeting small{color:var(--muted);font-size:11px}
+.greeting h2{font-size:23px;margin-top:7px}
+.profile{background:var(--panel);border:1px solid var(--border);padding:11px 16px;border-radius:13px;font-size:11px}
+.page{display:none;animation:enter .3s ease}
+.page.active{display:block}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.heading{margin-bottom:25px}
+.heading h1{font-size:31px;letter-spacing:-1.4px}
+.heading p{color:var(--muted);font-size:12px;margin-top:9px}
+.grid{display:grid;gap:17px}
+.grid-main{grid-template-columns:1.6fr 1fr}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:22px;min-width:0}
+.hero-card{background:linear-gradient(120deg,#29204c,#171c35 65%,#162f46);min-height:220px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.hero-card small{color:#c1b4f8;letter-spacing:2px;font-size:10px}
+.hero-card h2{font-size:34px;letter-spacing:-1.5px;line-height:1.15}
+.hero-card p{font-size:12px;color:#c0c2d4;margin-top:10px}
+.btn{border:0;border-radius:10px;padding:11px 16px;background:var(--purple);color:white;font-size:12px;font-weight:600}
+.btn:hover{filter:brightness(1.2)}
+.btn.secondary{background:#ffffff12;border:1px solid var(--border)}
+.clock{text-align:center;display:grid;place-content:center}
+.clock strong{font-size:38px;letter-spacing:-2px}
+.clock p{color:var(--muted);font-size:11px;margin-top:8px}
+.clock .date{color:var(--purple);font-size:12px;margin-top:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:17px}
+.stat{background:var(--panel2);padding:16px;border-radius:12px}
+.stat small{color:var(--muted);font-size:10px}
+.stat strong{display:block;font-size:22px;margin-top:8px}
+.feature-grid{grid-template-columns:repeat(3,1fr);margin-top:17px}
+.feature{min-height:150px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:.2s}
+.feature:hover{transform:translateY(-4px);border-color:#9875ff70}
+.feature .emoji{font-size:26px}
+.feature h3{font-size:15px}
+.feature p{color:var(--muted);font-size:11px;margin-top:6px}
+.purple{background:linear-gradient(140deg,#241b43,#11131d)}
+.blue{background:linear-gradient(140deg,#142c40,#11131d)}
+.pink{background:linear-gradient(140deg,#3c1c35,#11131d)}
+.green{background:linear-gradient(140deg,#173a35,#11131d)}
+.orange{background:linear-gradient(140deg,#41291d,#11131d)}
+.section-gap{margin-top:28px}
+input,textarea{width:100%;background:#0b0c13;border:1px solid var(--border);color:var(--text);padding:13px;border-radius:10px;outline:none}
+textarea{resize:vertical;min-height:120px}
+.notes-actions{display:flex;gap:10px;margin-top:12px}
+.saved-notes{display:grid;gap:10px;margin-top:18px}
+.note-item{background:var(--panel2);padding:15px;border-radius:12px;font-size:12px;display:flex;justify-content:space-between;gap:12px}
+.delete{background:none;border:0;color:#ff8197}
+.timer{text-align:center;padding:35px 10px}
+.timer h2{font-size:75px;letter-spacing:-4px;margin:25px}
+.timer-controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.timer-status{color:var(--muted);font-size:11px}
+.random-box{min-height:210px;display:grid;place-items:center;text-align:center;background:linear-gradient(140deg,#211b3f,#121c31)}
+.random-box h2{font-size:24px;max-width:500px;line-height:1.4}
+.random-box p{color:var(--muted);font-size:11px;margin-top:15px}
+
+/* MUSIC STUDIO */
+.music-hero{background:linear-gradient(115deg,#38275e,#1b2945 65%,#1a3a42);border-radius:20px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden;min-height:195px}
+.music-hero small{color:#c7b5ff;letter-spacing:2px;font-size:10px}
+.music-hero h2{font-size:30px;margin-top:13px;letter-spacing:-1px}
+.music-hero p{font-size:12px;color:#c5c7d7;margin-top:8px}
+.music-art{width:125px;height:125px;flex-shrink:0;border-radius:22px;background:linear-gradient(140deg,#d5a2b9,#655b9f,#283c64);display:grid;place-items:center;font-size:50px;box-shadow:0 15px 50px #0005}
+.playlists{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:19px}
+.playlist-card{border:1px solid var(--border);border-radius:14px;padding:15px;cursor:pointer;transition:.2s;min-width:0}
+.playlist-card:hover,.playlist-card.selected{border-color:#a58aff;background:#9875ff12}
+.playlist-card .p-icon{font-size:25px}
+.playlist-card strong{display:block;font-size:12px;margin-top:12px}
+.playlist-card small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.music-section{margin-top:28px}
+.music-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.music-section-head h2{font-size:19px}
+.music-section-head span{font-size:10px;color:var(--muted)}
+.music-search{max-width:250px;font-size:11px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter{background:#ffffff0b;border:1px solid var(--border);color:var(--muted);padding:8px 12px;border-radius:30px;font-size:10px}
+.filter.active{background:#9875ff25;color:#c7b5ff;border-color:#9875ff80}
+.track-list{display:grid;gap:5px}
+.track{display:grid;grid-template-columns:38px minmax(0,1fr) 40px 35px;align-items:center;gap:12px;padding:10px;border-radius:11px;cursor:pointer}
+.track:hover,.track.playing{background:#ffffff0c}
+.track-cover{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;font-size:17px;background:linear-gradient(135deg,#7253b9,#263c59)}
+.track-name{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track-meta{font-size:10px;color:var(--muted);margin-top:5px}
+.track-number{font-size:11px;color:var(--muted);text-align:center}
+.track-play{border:0;background:none;color:#bba6ff;font-size:17px}
+.track-fav{border:0;background:none;color:#777;font-size:16px}
+.track-fav.liked{color:#ff75bd}
+.music-status{font-size:11px;color:var(--muted);padding:15px 0}
+.music-player{position:fixed;bottom:0;left:230px;right:0;min-height:88px;background:#11121bee;backdrop-filter:blur(22px);border-top:1px solid #ffffff16;z-index:20;display:grid;grid-template-columns:1fr 1.4fr 1fr;align-items:center;padding:12px 25px;gap:15px}
+.now-playing{display:flex;align-items:center;gap:12px;min-width:0}
+.mini-art{width:47px;height:47px;border-radius:10px;background:linear-gradient(135deg,#9875ff,#36506c);display:grid;place-items:center;font-size:21px;flex-shrink:0}
+.now-title{font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.now-sub{font-size:10px;color:var(--muted);margin-top:5px}
+.player-center{display:grid;gap:7px}
+.player-buttons{display:flex;justify-content:center;align-items:center;gap:20px}
+.player-buttons button{background:none;border:0;color:#c6c7d3;font-size:17px}
+.player-buttons .main-play{background:#fff;color:#111;border-radius:50%;width:34px;height:34px;font-size:14px}
+.seek-row{display:flex;align-items:center;gap:9px;font-size:9px;color:var(--muted)}
+input[type=range]{accent-color:#a78bfa;cursor:pointer;padding:0;height:4px}
+.seek-row input{flex:1}
+.player-right{display:flex;justify-content:flex-end;align-items:center;gap:12px}
+.player-right span{font-size:12px;color:var(--muted)}
+.player-right input{width:85px}
+.empty-state{color:var(--muted);font-size:11px;padding:20px 5px}
+.wallpaper{height:230px;border-radius:17px;margin-top:20px}
+.palette{display:flex;gap:10px;margin-top:18px}
+.swatch{width:43px;height:43px;border-radius:11px;border:2px solid #ffffff25;cursor:pointer}
+footer{padding:30px 0;color:#555a6d;font-size:10px;text-align:center;margin-top:35px}
+.toast{position:fixed;bottom:110px;right:25px;background:#25213a;border:1px solid #9875ff66;padding:14px 20px;border-radius:12px;font-size:12px;opacity:0;transition:.3s;pointer-events:none;z-index:40}
+.toast.show{opacity:1}
+@media(max-width:900px){
+.sidebar{width:70px;padding:20px 8px}.logo{font-size:14px;letter-spacing:2px;padding:10px 4px 35px}
+.side-label,.nav .label,.side-bottom{display:none}.nav button{justify-content:center;padding:14px 5px}
+main{margin-left:70px;width:calc(100% - 70px);padding:24px 3% 125px}
+.music-player{left:70px}.grid-main{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+main{padding:18px 13px 145px}.feature-grid{grid-template-columns:repeat(2,1fr)}
+.playlists{grid-template-columns:repeat(2,1fr)}
+.music-hero{padding:20px}.music-hero h2{font-size:24px}.music-art{width:85px;height:85px;font-size:35px}
+.music-player{grid-template-columns:1fr auto;padding:10px 13px;gap:8px}
+.player-center{grid-column:1/-1;grid-row:2}.player-right{grid-column:2;grid-row:1}
+.player-right input,.player-right span{display:none}
+.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:11px}.stat strong{font-size:18px}
+.timer h2{font-size:58px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+ <div class="logo">PUL<span>SE</span></div>
+ <div class="side-label">WORKSPACE</div>
+ <div class="nav">
+  <button class="active" data-page="home"><span class="ico">⌂</span><span class="label">Dashboard</span></button>
+  <button data-page="music"><span class="ico">♫</span><span class="label">Music Studio</span></button>
+  <button data-page="visual"><span class="ico">◈</span><span class="label">Visual Lab</span></button>
+  <button data-page="notes"><span class="ico">▤</span><span class="label">Quick Notes</span></button>
+  <button data-page="focus"><span class="ico">◷</span><span class="label">Focus Mode</span></button>
+  <button data-page="random"><span class="ico">✳</span><span class="label">Random Zone</span></button>
+ </div>
+ <div class="side-bottom"><span class="online">● SYSTEM ONLINE</span><br>PULSE EXPERIENCE<br>VERSION 2.0</div>
+</aside>
+
+<main>
+<div class="topbar">
+ <div class="greeting"><small id="today">YOUR PERSONAL SPACE</small><h2 id="greeting">Welcome back.</h2></div>
+ <div class="profile">✦ MY SPACE</div>
+</div>
+
+<section class="page active" id="home">
+ <div class="heading"><h1>Your world. Your rules.</h1><p>Everything you need, all in one place.</p></div>
+ <div class="grid grid-main">
+  <div class="card hero-card"><small>✦ YOUR DIGITAL SPACE</small><div><h2>Make today<br>feel different.</h2><p>A little space for everything you love.</p></div><div><button class="btn" onclick="go('music')">Open Music Studio ↗</button></div></div>
+  <div class="card clock"><strong id="clock">00:00:00</strong><p>Take your time. Make it count.</p><div class="date" id="full-date"></div></div>
+ </div>
+ <div class="stats">
+  <div class="stat"><small>YOUR NOTES</small><strong id="note-count">0</strong></div>
+  <div class="stat"><small>MUSIC LIBRARY</small><strong id="music-count">—</strong></div>
+  <div class="stat"><small>FOCUS SESSIONS</small><strong id="focus-count">0</strong></div>
+ </div>
+ <div class="heading section-gap"><h1>Explore your tools.</h1><p>Choose your next experience.</p></div>
+ <div class="grid feature-grid">
+  <div class="card feature purple" onclick="go('music')"><span class="emoji">🎧</span><div><h3>Music Studio</h3><p>Your sounds, your atmosphere.</p></div></div>
+  <div class="card feature blue" onclick="go('visual')"><span class="emoji">🎨</span><div><h3>Visual Lab</h3><p>Build your own color worlds.</p></div></div>
+  <div class="card feature pink" onclick="go('notes')"><span class="emoji">📝</span><div><h3>Quick Notes</h3><p>Save every little idea.</p></div></div>
+  <div class="card feature green" onclick="go('focus')"><span class="emoji">⚡</span><div><h3>Focus Mode</h3><p>One thing at a time.</p></div></div>
+  <div class="card feature orange" onclick="go('random')"><span class="emoji">🎲</span><div><h3>Random Zone</h3><p>Find something new to do.</p></div></div>
+ </div>
+</section>
+
+<section class="page" id="music">
+ <div class="heading"><h1>Music Studio 🎧</h1><p>A soundtrack for every version of you.</p></div>
+ <div class="music-hero">
+  <div><small>✦ PULSE RADIO / YOUR DAILY SOUNDTRACK</small><h2>Find your frequency.</h2><p>Chill R&B · Bedroom Pop vibes · Lo-fi · Ambient</p></div>
+  <div class="music-art">♫</div>
+ </div>
+ <div class="playlists">
+  <div class="playlist-card selected" onclick="filterTracks('all',this)"><span class="p-icon">🌙</span><strong>ALL VIBES</strong><small>Everything together</small></div>
+  <div class="playlist-card" onclick="filterTracks('soul-rnb',this)"><span class="p-icon">💜</span><strong>MIDNIGHT</strong><small>Slow jams & warm sounds</small></div>
+  <div class="playlist-card" onclick="filterTracks('late-night',this)"><span class="p-icon">🌃</span><strong>AFTER HOURS</strong><small>Late night atmosphere</small></div>
+  <div class="playlist-card" onclick="filterTracks('ambient-lofi',this)"><span class="p-icon">☁️</span><strong>DEEP FOCUS</strong><small>Ambient & dreamscapes</small></div>
+ </div>
+ <div class="music-section">
+  <div class="music-section-head"><div><h2>Your library</h2><span id="library-count">Loading music collection...</span></div><input class="music-search" id="music-search" placeholder="Search tracks..." oninput="renderTracks()"></div>
+  <div class="filters">
+   <button class="filter active" onclick="filterTracks('all',this)">All</button>
+   <button class="filter" onclick="filterTracks('soul-rnb',this)">Soul / R&B</button>
+   <button class="filter" onclick="filterTracks('chillhop',this)">Chillhop</button>
+   <button class="filter" onclick="filterTracks('ambient-lofi',this)">Ambient</button>
+   <button class="filter" onclick="filterTracks('late-night',this)">After Hours</button>
+   <button class="filter" onclick="filterTracks('activities',this)">Focus</button>
+  </div>
+ <div style="margin-bottom:16px">
+  <input id="folder-picker" type="file" webkitdirectory multiple accept="audio/*,.mp3" style="display:none">
+  <button class="btn" onclick="document.getElementById('folder-picker').click()">
+    📂 Select Open Lo-Fi folder
+  </button>
+  <p style="font-size:10px;color:var(--muted);margin-top:9px">
+    Select the openlofi folder to load your local music.
+  </p>
+</div>
+<div class="track-list" id="track-list"> </div>
+ <div class="music-section">
+  <div class="music-section-head"><h2>Made for your favourites ♥</h2><span>YOUR SAVED TRACKS</span></div>
+  <div id="favorites-list" class="track-list"><div class="empty-state">Tap the heart on any track to save it here.</div></div>
+ </div>
+ <div class="music-status" id="music-status">Music collection powered by Open Lo-Fi · CC0 public domain.</div>
+</section>
+
+<section class="page" id="visual">
+ <div class="heading"><h1>Visual Lab 🎨</h1><p>Create your own digital atmosphere.</p></div>
+ <div class="card"><div class="wallpaper" id="wallpaper"></div><div class="palette" id="palette"></div><div class="notes-actions"><button class="btn" onclick="randomWallpaper()">Generate design ↗</button><button class="btn secondary" onclick="downloadWallpaper()">Download ↓</button></div></div>
+</section>
+
+<section class="page" id="notes">
+ <div class="heading"><h1>Quick Notes 📝</h1><p>Ideas deserve a place to live.</p></div>
+ <div class="card"><textarea id="note-input" placeholder="Write something..."></textarea><div class="notes-actions"><button class="btn" onclick="addNote()">Save note +</button><button class="btn secondary" onclick="document.getElementById('note-input').value=''">Clear</button></div></div>
+ <div class="heading section-gap"><h1>Your collection</h1></div><div class="saved-notes" id="saved-notes"></div>
+</section>
+
+<section class="page" id="focus">
+ <div class="heading"><h1>Focus Mode ⚡</h1><p>One thing at a time.</p></div>
+ <div class="card timer"><div class="timer-status" id="timer-status">READY WHEN YOU ARE</div><h2 id="timer">25:00</h2><div class="timer-controls"><button class="btn" id="start-btn" onclick="startTimer()">Start session</button><button class="btn secondary" onclick="pauseTimer()">Pause</button><button class="btn secondary" onclick="resetTimer()">Reset</button></div><div style="margin-top:28px"><button class="btn secondary" onclick="setTimer(15)">15 min</button> <button class="btn secondary" onclick="setTimer(25)">25 min</button> <button class="btn secondary" onclick="setTimer(45)">45 min</button></div></div>
+</section>
+
+<section class="page" id="random">
+ <div class="heading"><h1>Random Zone 🎲</h1><p>Find something new to do.</p></div>
+ <div class="card random-box"><div><div style="font-size:35px;margin-bottom:20px">✳</div><h2 id="random-text">Ready for something different?</h2><p id="random-category">YOUR NEXT IDEA IS ONE CLICK AWAY.</p><button class="btn" style="margin-top:27px" onclick="newRandom()">Give me an idea ↗</button></div></div>
+</section>
+<footer>PULSE © 2026 — MADE FOR YOUR WORLD.</footer>
+</main>
+</div>
+
+<!-- FIXED MUSIC PLAYER -->
+<div class="music-player">
+ <div class="now-playing">
+  <div class="mini-art" id="mini-art">♫</div>
+  <div style="min-width:0"><div class="now-title" id="now-title">Choose a track</div><div class="now-sub" id="now-sub">PULSE MUSIC STUDIO</div></div>
+ </div>
+ <div class="player-center">
+  <div class="player-buttons">
+   <button id="shuffle" title="Shuffle" onclick="toggleShuffle()">⤨</button>
+   <button onclick="previousTrack()">◀|</button>
+   <button class="main-play" id="play-button" onclick="togglePlay()">▶</button>
+   <button onclick="nextTrack()">|▶</button>
+   <button id="repeat" title="Repeat" onclick="toggleRepeat()">↻</button>
+  </div>
+  <div class="seek-row"><span id="current-time">0:00</span><input id="seek" type="range" min="0" max="100" value="0"><span id="duration">0:00</span></div>
+ </div>
+ <div class="player-right"><span>♫</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
+</div>
+<audio id="audio" preload="none"></audio>
+<div class="toast" id="toast"></div>
+
+<script>
+// NAVIGATION
+function go(page){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+ document.getElementById(page).classList.add('active');
+ const b=document.querySelector('[data-page="'+page+'"]');
+ if(b)b.classList.add('active');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.page));
+
+// CLOCK
+function updateClock(){
+ const d=new Date();
+ document.getElementById('clock').textContent=d.toLocaleTimeString('pt-PT');
+ document.getElementById('full-date').textContent=d.toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ document.getElementById('today').textContent=d.toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+ const h=d.getHours();
+ document.getElementById('greeting').textContent=h<12?'Good morning.':h<18?'Good afternoon.':'Good evening.';
+}
+updateClock();setInterval(updateClock,1000);
+
+// TOAST
+let toastTimer;
+function toast(msg){
+ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// NOTES
+let notes=JSON.parse(localStorage.getItem('pulse-notes')||'[]');
+function renderNotes(){
+ const box=document.getElementById('saved-notes');box.innerHTML='';
+ document.getElementById('note-count').textContent=notes.length;
+ if(!notes.length){box.innerHTML='<div class="card empty-state">Nothing here yet. Create your first note!</div>';return;}
+ notes.forEach((n,i)=>{
+  const item=document.createElement('div');item.className='note-item';
+  const content=document.createElement('div');
+  const date=document.createElement('small');date.style.color='var(--muted)';date.textContent=n.date;
+  const txt=document.createElement('div');txt.textContent=n.text;txt.style.marginTop='8px';
+  content.append(date,txt);
+  const del=document.createElement('button');del.className='delete';del.textContent='✕';del.onclick=()=>{notes.splice(i,1);saveNotes();};
+  item.append(content,del);box.append(item);
+ });
+}
+function saveNotes(){localStorage.setItem('pulse-notes',JSON.stringify(notes));renderNotes();}
+function addNote(){
+ const input=document.getElementById('note-input'),value=input.value.trim();
+ if(!value)return toast('Write something first!');
+ notes.unshift({text:value,date:new Date().toLocaleString('pt-PT')});
+ input.value='';saveNotes();toast('Note saved!');
+}
+renderNotes();
+
+// LOCAL MUSIC LIBRARY — PULSE
+let tracks = [];
+let visibleTracks = [];
+let currentIndex = -1;
+let activeFilter = 'all';
+let shuffle = false;
+let repeat = false;
+const audio = document.getElementById('audio');
+
+const folderPicker = document.getElementById('folder-picker');
+
+folderPicker.addEventListener('change', function(e) {
+  const files = Array.from(e.target.files)
+    .filter(file => file.name.toLowerCase().endsWith('.mp3'))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (!files.length) {
+    toast('No MP3 files found in that folder.');
+    return;
+  }
+
+  if (audio.src.startsWith('blob:')) {
+    URL.revokeObjectURL(audio.src);
+  }
+
+  tracks = files.map(file => {
+    const title = file.name
+      .replace(/\.mp3$/i, '')
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase());
+
+    const name = file.name.toLowerCase();
+
+    let category = 'chillhop';
+
+    if (/soul|rnb|slow|warm|honey|love/.test(name)) {
+      category = 'soul-rnb';
+    } else if (/night|midnight|3am|late|window/.test(name)) {
+      category = 'late-night';
+    } else if (/ambient|float|space|dream|fog|drift|cloud/.test(name)) {
+      category = 'ambient-lofi';
+    } else if (/focus|study|work|reading|activity/.test(name)) {
+      category = 'activities';
+    }
+
+    return {
+      title,
+      filename: file.name,
+      category,
+      file,
+      url: URL.createObjectURL(file)
+    };
+  });
+
+  currentIndex = -1;
+
+  document.getElementById('music-count').textContent = tracks.length;
+  document.getElementById('library-count').textContent =
+    tracks.length + ' local tracks available';
+
+  document.getElementById('music-status').textContent =
+    'LOCAL LIBRARY CONNECTED · ' + tracks.length + ' MP3 TRACKS';
+
+  renderTracks();
+  renderFavorites();
+
+  toast(tracks.length + ' songs loaded successfully!');
+});
+
+function categoryName(c) {
+  const names = {
+    'soul-rnb': 'Soul / R&B',
+    'late-night': 'After Hours',
+    'ambient-lofi': 'Ambient',
+    'chillhop': 'Chillhop',
+    'activities': 'Focus'
+  };
+  return names[c] || 'Lo-fi';
+}
+
+function trackIcon(c) {
+  if (c === 'ambient-lofi') return '☁️';
+  if (c === 'soul-rnb') return '💜';
+  if (c === 'late-night') return '🌃';
+  if (c === 'activities') return '📖';
+  if (c === 'chillhop') return '☕';
+  return '♫';
+}
+
+function renderTracks() {
+  const query = document.getElementById('music-search').value.toLowerCase();
+
+  visibleTracks = tracks.map((t, i) => ({...t, index:i})).filter(t =>
+    (activeFilter === 'all' || t.category === activeFilter) &&
+    (t.title.toLowerCase().includes(query) ||
+     categoryName(t.category).toLowerCase().includes(query))
+  );
+
+  const box = document.getElementById('track-list');
+  box.innerHTML = '';
+
+  if (!visibleTracks.length) {
+    box.innerHTML = '<div class="empty-state">No tracks found. Load your music folder first.</div>';
+    return;
+  }
+
+  visibleTracks.forEach((t, i) => {
+    const row = document.createElement('div');
+    row.className = 'track' + (currentIndex === t.index ? ' playing' : '');
+
+    const number = document.createElement('div');
+    number.className = 'track-number';
+    number.textContent = String(i + 1).padStart(2, '0');
+
+    const cover = document.createElement('div');
+    cover.className = 'track-cover';
+    cover.textContent = trackIcon(t.category);
+
+    const info = document.createElement('div');
+
+    const name = document.createElement('div');
+    name.className = 'track-name';
+    name.textContent = t.title;
+
+    const meta = document.createElement('div');
+    meta.className = 'track-meta';
+    meta.textContent = categoryName(t.category) + ' · LOCAL MP3';
+
+    info.append(name, meta);
+
+    const play = document.createElement('button');
+    play.className = 'track-play';
+    play.textContent = currentIndex === t.index && !audio.paused ? 'Ⅱ' : '▶';
+    play.onclick = () => currentIndex === t.index ? togglePlay() : playTrack(t.index);
+
+    const fav = document.createElement('button');
+    fav.className = 'track-fav' + (isFav(t.title) ? ' liked' : '');
+    fav.textContent = '♥';
+    fav.onclick = () => toggleFav(t.title);
+
+    row.append(number, cover, info, play, fav);
+    box.append(row);
+  });
+}
+
+function filterTracks(filter, el) {
+  activeFilter = filter;
+
+  document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.playlist-card').forEach(b => b.classList.remove('selected'));
+
+  if (el) {
+    if (el.classList.contains('playlist-card')) el.classList.add('selected');
+    else el.classList.add('active');
+  }
+
+  renderTracks();
+}
+
+// PLAYER
+function playTrack(index) {
+  if (index < 0 || index >= tracks.length) return;
+
+  currentIndex = index;
+  const t = tracks[index];
+
+  audio.src = t.url;
+  audio.load();
+
+  audio.play().then(() => {
+    document.getElementById('now-title').textContent = t.title;
+    document.getElementById('now-sub').textContent = categoryName(t.category) + ' · PULSE';
+    document.getElementById('mini-art').textContent = trackIcon(t.category);
+    document.getElementById('play-button').textContent = 'Ⅱ';
+
+    renderTracks();
+    renderFavorites();
+  }).catch(() => toast('Unable to play this track.'));
+}
+
+function togglePlay() {
+  if (currentIndex < 0) {
+    if (tracks.length) playTrack(0);
+    else toast('Select your music folder first.');
+    return;
+  }
+
+  if (audio.paused) {
+    audio.play().catch(() => toast('Playback unavailable.'));
+  } else {
+    audio.pause();
+  }
+
+  renderTracks();
+}
+
+function nextTrack() {
+  if (!tracks.length) return;
+
+  let next = shuffle
+    ? Math.floor(Math.random() * tracks.length)
+    : (currentIndex + 1) % tracks.length;
+
+  playTrack(next);
+}
+
+function previousTrack() {
+  if (!tracks.length) return;
+
+  if (audio.currentTime > 3) {
+    audio.currentTime = 0;
+    return;
+  }
+
+  playTrack((currentIndex - 1 + tracks.length) % tracks.length);
+}
+
+function toggleShuffle() {
+  shuffle = !shuffle;
+  document.getElementById('shuffle').style.color =
+    shuffle ? '#bba6ff' : '#c6c7d3';
+  toast(shuffle ? 'Shuffle on' : 'Shuffle off');
+}
+
+function toggleRepeat() {
+  repeat = !repeat;
+  document.getElementById('repeat').style.color =
+    repeat ? '#bba6ff' : '#c6c7d3';
+  toast(repeat ? 'Repeat on' : 'Repeat off');
+}
+
+audio.addEventListener('ended', () => {
+  if (repeat) {
+    audio.currentTime = 0;
+    audio.play();
+  } else {
+    nextTrack();
+  }
+});
+
+audio.addEventListener('play', () => {
+  document.getElementById('play-button').textContent = 'Ⅱ';
+  renderTracks();
+});
+
+audio.addEventListener('pause', () => {
+  document.getElementById('play-button').textContent = '▶';
+  renderTracks();
+});
+
+audio.addEventListener('timeupdate', () => {
+  const seek = document.getElementById('seek');
+
+  if (audio.duration) {
+    seek.value = audio.currentTime / audio.duration * 100;
+    document.getElementById('current-time').textContent = formatTime(audio.currentTime);
+    document.getElementById('duration').textContent = formatTime(audio.duration);
+  }
+});
+
+document.getElementById('seek').addEventListener('input', e => {
+  if (audio.duration) {
+    audio.currentTime = Number(e.target.value) / 100 * audio.duration;
+  }
+});
+
+document.getElementById('volume').addEventListener('input', e => {
+  audio.volume = Number(e.target.value);
+});
+
+audio.volume = 0.8;
+
+function formatTime(s) {
+  if (!Number.isFinite(s)) return '0:00';
+  return Math.floor(s / 60) + ':' +
+    String(Math.floor(s % 60)).padStart(2, '0');
+}
+
+// FAVOURITES
+let favorites = JSON.parse(localStorage.getItem('pulse-favorites') || '[]');
+
+function isFav(title) {
+  return favorites.includes(title);
+}
+
+function toggleFav(title) {
+  favorites = isFav(title)
+    ? favorites.filter(x => x !== title)
+    : [...favorites, title];
+
+  localStorage.setItem('pulse-favorites', JSON.stringify(favorites));
+  renderTracks();
+  renderFavorites();
+}
+
+function renderFavorites() {
+  const box = document.getElementById('favorites-list');
+  box.innerHTML = '';
+
+  const list = tracks.map((t, i) => ({...t, index:i}))
+    .filter(t => isFav(t.title));
+
+  if (!list.length) {
+    box.innerHTML = '<div class="empty-state">Tap the heart on any track to save it here.</div>';
+    return;
+  }
+
+  list.forEach(t => {
+    const row = document.createElement('div');
+    row.className = 'track';
+
+    const cover = document.createElement('div');
+    cover.className = 'track-cover';
+    cover.textContent = trackIcon(t.category);
+
+    const info = document.createElement('div');
+
+    const name = document.createElement('div');
+    name.className = 'track-name';
+    name.textContent = t.title;
+
+    const meta = document.createElement('div');
+    meta.className = 'track-meta';
+    meta.textContent = categoryName(t.category);
+
+    info.append(name, meta);
+
+    const play = document.createElement('button');
+    play.className = 'track-play';
+    play.textContent = '▶';
+    play.onclick = () => playTrack(t.index);
+
+    const remove = document.createElement('button');
+    remove.className = 'track-fav liked';
+    remove.textContent = '♥';
+    remove.onclick = () => toggleFav(t.title);
+
+    row.append(cover, info, play, remove);
+    box.append(row);
+  });
+}
+
+// VISUAL LAB
+const palettes=[
+ ['#9875ff','#65baff','#ff75bd'],
+ ['#00c9a7','#7b61ff','#ffcc70'],
+ ['#ff5470','#ff9671','#ffc75f'],
+ ['#152a68','#00c6ff','#a18cd1'],
+ ['#00f5a0','#00d9f5','#845ec2'],
+ ['#ff61d2','#fe9090','#f9f871']
+];
+let selected=palettes[0];
+function renderPalette(){
+ const box=document.getElementById('palette');box.innerHTML='';
+ selected.forEach(c=>{
+  const sw=document.createElement('button');sw.className='swatch';sw.style.background=c;sw.onclick=()=>toast(c);box.append(sw);
+ });
+}
+function randomWallpaper(){
+ selected=palettes[Math.floor(Math.random()*palettes.length)];
+ const a=Math.floor(Math.random()*360);
+ document.getElementById('wallpaper').style.background=`radial-gradient(ellipse at 20% 30%,${selected[0]},transparent 55%),radial-gradient(ellipse at 80% 70%,${selected[1]},transparent 55%),linear-gradient(${a}deg,${selected[2]},#090a10)`;
+ renderPalette();
+}
+function downloadWallpaper(){
+ const c=document.createElement('canvas');c.width=1920;c.height=1080;
+ const ctx=c.getContext('2d'),g=ctx.createLinearGradient(0,0,1920,1080);
+ g.addColorStop(0,selected[0]);g.addColorStop(.5,selected[1]);g.addColorStop(1,selected[2]);
+ ctx.fillStyle=g;ctx.fillRect(0,0,1920,1080);
+ const a=document.createElement('a');a.download='pulse-wallpaper.png';a.href=c.toDataURL();a.click();toast('Wallpaper downloaded!');
+}
+randomWallpaper();
+
+// FOCUS TIMER
+let remaining=1500,timerInterval=null;
+let sessions=Number(localStorage.getItem('pulse-sessions')||0);
+document.getElementById('focus-count').textContent=sessions;
+function showTimer(){
+ document.getElementById('timer').textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(remaining%60).padStart(2,'0');
+}
+function startTimer(){
+ if(timerInterval)return;
+ document.getElementById('timer-status').textContent='FOCUS SESSION IN PROGRESS';
+ document.getElementById('start-btn').textContent='Running...';
+ timerInterval=setInterval(()=>{
+  if(remaining>0){remaining--;showTimer();}
+  else{
+   clearInterval(timerInterval);timerInterval=null;sessions++;
+   localStorage.setItem('pulse-sessions',sessions);
+   document.getElementById('focus-count').textContent=sessions;
+   document.getElementById('timer-status').textContent='SESSION COMPLETED!';
+   document.getElementById('start-btn').textContent='Start session';toast('Great work!');
+  }
+ },1000);
+}
+function pauseTimer(){
+ clearInterval(timerInterval);timerInterval=null;
+ document.getElementById('timer-status').textContent='SESSION PAUSED';
+ document.getElementById('start-btn').textContent='Resume session';
+}
+function resetTimer(){
+ clearInterval(timerInterval);timerInterval=null;remaining=1500;showTimer();
+ document.getElementById('timer-status').textContent='READY WHEN YOU ARE';
+ document.getElementById('start-btn').textContent='Start session';
+}
+function setTimer(m){
+ clearInterval(timerInterval);timerInterval=null;remaining=m*60;showTimer();
+ document.getElementById('timer-status').textContent='READY WHEN YOU ARE';
+ document.getElementById('start-btn').textContent='Start session';
+}
+showTimer();
+
+// RANDOM ZONE
+const ideas=[
+ ['Learn to draw something in 10 minutes.','CREATIVE'],
+ ['Create a playlist with five new songs.','MUSIC'],
+ ['Build a mini website about something you love.','TECH'],
+ ['Take five photos of interesting things.','CREATIVE'],
+ ['Learn five words in a new language.','LEARNING'],
+ ['Design your dream room on paper.','DESIGN'],
+ ['Watch a documentary about something new.','DISCOVERY'],
+ ['Write down ten ideas for a future project.','PRODUCTIVITY'],
+ ['Create a new digital wallpaper.','DESIGN'],
+ ['Learn a new Python concept.','TECH'],
+ ['Organize your desktop.','PRODUCTIVITY'],
+ ['Explore an artist you have never listened to.','MUSIC']
+];
+function newRandom(){
+ const idea=ideas[Math.floor(Math.random()*ideas.length)];
+ document.getElementById('random-text').textContent=idea[0];
+ document.getElementById('random-category').textContent=idea[1]+' EXPERIENCE';
+}
+</script>
+</body>
+</html>
+
