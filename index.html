@@ -6,6 +6,43 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PULSE — Your Digital Life</title>
 <style>
+/* PULSE MUSIC STUDIO PRO */
+.pro-tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.pro-btn{background:#ffffff0b;border:1px solid var(--border);color:#c9c3e8;padding:10px 14px;border-radius:10px;font-size:11px}
+.pro-btn:hover{background:#9875ff25;border-color:#9875ff80}
+.pro-panel{background:#12141e;border:1px solid var(--border);border-radius:16px;padding:19px;margin-top:17px}
+.pro-panel h3{font-size:14px;margin-bottom:13px}
+.pro-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.pro-panel-head small{color:var(--muted);font-size:10px}
+.pro-input{background:#0b0c13;border:1px solid var(--border);color:white;padding:11px;border-radius:9px;font-size:11px}
+.pro-playlists{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.pro-playlist{background:var(--panel2);padding:14px;border-radius:12px;border:1px solid var(--border);cursor:pointer}
+.pro-playlist.active{border-color:var(--purple);background:#9875ff18}
+.pro-playlist strong{display:block;font-size:11px;margin-top:9px}
+.pro-playlist small{font-size:10px;color:var(--muted)}
+.pro-track-cover{width:45px;height:45px;border-radius:11px;display:grid;place-items:center;font-size:21px;box-shadow:0 5px 18px #0005}
+.pro-row{display:flex;align-items:center;gap:11px;padding:10px;border-radius:11px}
+.pro-row:hover{background:#ffffff09}
+.pro-row-info{flex:1;min-width:0}
+.pro-row-info strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pro-row-info small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.pro-row button{background:none;border:0;color:#c5b5ff;font-size:15px;padding:5px}
+.pro-modal{position:fixed;inset:0;background:#05050bdc;backdrop-filter:blur(15px);z-index:50;display:none;place-items:center;padding:20px}
+.pro-modal.open{display:grid}
+.pro-modal-card{width:min(430px,100%);background:#151622;border:1px solid #ffffff20;border-radius:23px;padding:25px;text-align:center;position:relative}
+.pro-big-art{width:220px;height:220px;border-radius:25px;margin:15px auto 24px;display:grid;place-items:center;font-size:75px;box-shadow:0 20px 60px #0008}
+.pro-modal-card h2{font-size:20px;overflow-wrap:anywhere}
+.pro-modal-card p{font-size:11px;color:var(--muted);margin-top:8px}
+.pro-close{position:absolute;right:18px;top:15px;background:none;border:0;color:white;font-size:22px}
+.pro-history,.pro-queue{display:grid;gap:4px}
+.pro-empty{font-size:11px;color:var(--muted);padding:12px 0}
+.track-actions{display:flex;gap:3px;align-items:center}
+.track-actions button{border:0;background:none;color:#bba6ff;font-size:14px;padding:5px}
+.track{grid-template-columns:38px minmax(0,1fr) auto}
+@media(max-width:650px){
+ .pro-big-art{width:180px;height:180px}
+ .pro-panel{padding:14px}
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 :root{--bg:#090a10;--panel:#12141e;--panel2:#1b1e2b;--text:#f5f5fb;--muted:#85899d;--purple:#9875ff;--border:#ffffff10}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -222,7 +259,46 @@ main{padding:18px 13px 145px}.feature-grid{grid-template-columns:repeat(2,1fr)}
  <div class="music-section">
   <div class="music-section-head"><h2>Made for your favourites ♥</h2><span>YOUR SAVED TRACKS</span></div>
   <div id="favorites-list" class="track-list"><div class="empty-state">Tap the heart on any track to save it here.</div></div>
- </div>
+ <!-- PULSE PRO PLAYLISTS -->
+<div class="pro-panel">
+  <div class="pro-panel-head">
+    <div>
+      <h3>✦ Your Playlists</h3>
+      <small>YOUR PERSONAL COLLECTION</small>
+    </div>
+    <button class="pro-btn" onclick="createPlaylist()">＋ New playlist</button>
+  </div>
+  <div class="pro-playlists" id="custom-playlists"></div>
+  <div id="playlist-content" style="margin-top:15px"></div>
+</div>
+
+<!-- RECENTLY PLAYED -->
+<div class="pro-panel">
+  <div class="pro-panel-head">
+    <h3>◷ Recently Played</h3>
+    <small>YOUR LISTENING HISTORY</small>
+  </div>
+  <div class="pro-history" id="recent-history">
+    <div class="pro-empty">Your listening history will appear here.</div>
+  </div>
+</div>
+
+<!-- UP NEXT -->
+<div class="pro-panel">
+  <div class="pro-panel-head">
+    <h3>♫ Up Next</h3>
+    <button class="pro-btn" onclick="clearQueue()">Clear queue</button>
+  </div>
+  <div class="pro-queue" id="up-next">
+    <div class="pro-empty">Your queue is empty.</div>
+  </div>
+</div>
+
+<div class="pro-tools">
+  <button class="pro-btn" onclick="openExpandedPlayer()">⛶ Expand Player</button>
+  <button class="pro-btn" onclick="addCurrentToQueue()">＋ Add current to queue</button>
+</div>
+</div>
  <div class="music-status" id="music-status">Music collection powered by Open Lo-Fi · CC0 public domain.</div>
 </section>
 
@@ -270,7 +346,19 @@ main{padding:18px 13px 145px}.feature-grid{grid-template-columns:repeat(2,1fr)}
 </div>
 <audio id="audio" preload="none"></audio>
 <div class="toast" id="toast"></div>
-
+<div class="pro-modal" id="expanded-player" onclick="if(event.target===this)closeExpandedPlayer()">
+  <div class="pro-modal-card">
+    <button class="pro-close" onclick="closeExpandedPlayer()">×</button>
+    <div class="pro-big-art" id="expanded-art">♫</div>
+    <h2 id="expanded-title">Choose a track</h2>
+    <p id="expanded-subtitle">PULSE MUSIC STUDIO PRO</p>
+    <div class="pro-tools" style="justify-content:center;margin-top:24px">
+      <button class="pro-btn" onclick="previousTrack()">◀ Previous</button>
+      <button class="btn" onclick="togglePlay()" id="expanded-play">▶ Play</button>
+      <button class="pro-btn" onclick="nextTrack()">Next ▶</button>
+    </div>
+  </div>
+</div>
 <script>
 // NAVIGATION
 function go(page){
@@ -515,9 +603,22 @@ function renderTracks() {
     fav.textContent = '♥';
     fav.onclick = () => toggleFav(t.title);
 
-    row.append(number, cover, info, play, fav);
-    box.append(row);
-  });
+   const actions=document.createElement('div');
+actions.className='track-actions';
+
+const queueBtn=document.createElement('button');
+queueBtn.textContent='＋';
+queueBtn.title='Add to queue';
+queueBtn.onclick=()=>addTrackToQueue(t.index);
+
+const playlistBtn=document.createElement('button');
+playlistBtn.textContent='▤';
+playlistBtn.title='Add to playlist';
+playlistBtn.onclick=()=>addToPlaylist(t.index);
+
+actions.append(queueBtn,playlistBtn,fav);
+row.append(number,cover,info,play,actions);
+box.append(row);  });
 }
 
 function filterTracks(filter, el) {
@@ -759,7 +860,358 @@ function renderFavorites() {
 
 // Load the public music collection
 loadOnlineMusic();
+// =====================================
+// PULSE MUSIC STUDIO PRO
+// =====================================
 
+let customPlaylists = JSON.parse(localStorage.getItem('pulse-playlists') || '[]');
+let selectedPlaylist = null;
+let listeningHistory = JSON.parse(localStorage.getItem('pulse-history') || '[]');
+let playQueue = [];
+
+function savePlaylists(){
+  localStorage.setItem('pulse-playlists',JSON.stringify(customPlaylists));
+}
+
+function createPlaylist(){
+  const name = prompt('Choose a name for your playlist:');
+  if(!name || !name.trim()) return;
+
+  customPlaylists.push({
+    id:Date.now(),
+    name:name.trim(),
+    tracks:[]
+  });
+
+  savePlaylists();
+  renderPlaylists();
+  toast('Playlist created!');
+}
+
+function renderPlaylists(){
+  const box=document.getElementById('custom-playlists');
+  if(!box)return;
+
+  box.innerHTML='';
+
+  if(!customPlaylists.length){
+    box.innerHTML='<div class="pro-empty">Create your first playlist!</div>';
+    return;
+  }
+
+  customPlaylists.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='pro-playlist'+(selectedPlaylist===p.id?' active':'');
+
+    const emoji=document.createElement('div');
+    emoji.style.fontSize='23px';
+    emoji.textContent='🎵';
+
+    const name=document.createElement('strong');
+    name.textContent=p.name;
+
+    const count=document.createElement('small');
+    count.textContent=p.tracks.length+' tracks';
+
+    card.append(emoji,name,count);
+    card.onclick=()=>{
+      selectedPlaylist=p.id;
+      renderPlaylists();
+      renderPlaylistContent();
+    };
+
+    box.append(card);
+  });
+}
+
+function addToPlaylist(index){
+  if(!customPlaylists.length){
+    toast('Create a playlist first!');
+    return;
+  }
+
+  const options=customPlaylists.map((p,i)=>(i+1)+'. '+p.name).join('\n');
+  const choice=prompt('Choose a playlist:\n'+options);
+
+  const number=Number(choice)-1;
+  if(!Number.isInteger(number)||!customPlaylists[number])return;
+
+  const playlist=customPlaylists[number];
+
+  if(playlist.tracks.includes(tracks[index].title)){
+    toast('Already in this playlist!');
+    return;
+  }
+
+  playlist.tracks.push(tracks[index].title);
+  savePlaylists();
+  renderPlaylists();
+
+  if(selectedPlaylist===playlist.id)renderPlaylistContent();
+
+  toast('Added to '+playlist.name+'!');
+}
+
+function renderPlaylistContent(){
+  const box=document.getElementById('playlist-content');
+  if(!box)return;
+
+  const playlist=customPlaylists.find(p=>p.id===selectedPlaylist);
+
+  if(!playlist){
+    box.innerHTML='';
+    return;
+  }
+
+  box.innerHTML='';
+
+  const heading=document.createElement('div');
+  heading.className='pro-panel-head';
+
+  const title=document.createElement('strong');
+  title.textContent=playlist.name;
+
+  const remove=document.createElement('button');
+  remove.className='pro-btn';
+  remove.textContent='Delete playlist';
+  remove.onclick=()=>{
+    if(!confirm('Delete this playlist?'))return;
+    customPlaylists=customPlaylists.filter(p=>p.id!==selectedPlaylist);
+    selectedPlaylist=null;
+    savePlaylists();
+    renderPlaylists();
+    renderPlaylistContent();
+  };
+
+  heading.append(title,remove);
+  box.append(heading);
+
+  if(!playlist.tracks.length){
+    const empty=document.createElement('div');
+    empty.className='pro-empty';
+    empty.textContent='This playlist is empty. Add tracks using the + button.';
+    box.append(empty);
+    return;
+  }
+
+  playlist.tracks.forEach(title=>{
+    const index=tracks.findIndex(t=>t.title===title);
+    if(index<0)return;
+
+    const row=document.createElement('div');
+    row.className='pro-row';
+
+    const info=document.createElement('div');
+    info.className='pro-row-info';
+
+    const name=document.createElement('strong');
+    name.textContent=title;
+
+    const meta=document.createElement('small');
+    meta.textContent=categoryName(tracks[index].category);
+
+    info.append(name,meta);
+
+    const play=document.createElement('button');
+    play.textContent='▶';
+    play.onclick=()=>playTrack(index);
+
+    const removeTrack=document.createElement('button');
+    removeTrack.textContent='×';
+    removeTrack.onclick=()=>{
+      playlist.tracks=playlist.tracks.filter(t=>t!==title);
+      savePlaylists();
+      renderPlaylists();
+      renderPlaylistContent();
+    };
+
+    row.append(info,play,removeTrack);
+    box.append(row);
+  });
+}
+
+function addToHistory(index){
+  const track=tracks[index];
+  if(!track)return;
+
+  listeningHistory.unshift({
+    title:track.title,
+    date:new Date().toLocaleString('pt-PT')
+  });
+
+  listeningHistory=listeningHistory.slice(0,20);
+  localStorage.setItem('pulse-history',JSON.stringify(listeningHistory));
+  renderHistory();
+}
+
+function renderHistory(){
+  const box=document.getElementById('recent-history');
+  if(!box)return;
+
+  box.innerHTML='';
+
+  if(!listeningHistory.length){
+    box.innerHTML='<div class="pro-empty">Your listening history will appear here.</div>';
+    return;
+  }
+
+  listeningHistory.forEach(item=>{
+    const row=document.createElement('div');
+    row.className='pro-row';
+
+    const info=document.createElement('div');
+    info.className='pro-row-info';
+
+    const name=document.createElement('strong');
+    name.textContent=item.title;
+
+    const date=document.createElement('small');
+    date.textContent=item.date;
+
+    info.append(name,date);
+
+    const index=tracks.findIndex(t=>t.title===item.title);
+
+    const play=document.createElement('button');
+    play.textContent='▶';
+    play.disabled=index<0;
+    play.onclick=()=>playTrack(index);
+
+    row.append(info,play);
+    box.append(row);
+  });
+}
+
+function addCurrentToQueue(){
+  if(currentIndex<0){
+    toast('Choose a track first!');
+    return;
+  }
+
+  playQueue.push(currentIndex);
+  renderQueue();
+  toast('Added to Up Next!');
+}
+
+function addTrackToQueue(index){
+  playQueue.push(index);
+  renderQueue();
+  toast('Added to queue!');
+}
+
+function renderQueue(){
+  const box=document.getElementById('up-next');
+  if(!box)return;
+
+  box.innerHTML='';
+
+  if(!playQueue.length){
+    box.innerHTML='<div class="pro-empty">Your queue is empty.</div>';
+    return;
+  }
+
+  playQueue.forEach((index,position)=>{
+    const track=tracks[index];
+    if(!track)return;
+
+    const row=document.createElement('div');
+    row.className='pro-row';
+
+    const info=document.createElement('div');
+    info.className='pro-row-info';
+
+    const name=document.createElement('strong');
+    name.textContent=track.title;
+
+    const meta=document.createElement('small');
+    meta.textContent='UP NEXT · '+(position+1);
+
+    info.append(name,meta);
+
+    const play=document.createElement('button');
+    play.textContent='▶';
+    play.onclick=()=>{
+      playQueue.splice(position,1);
+      renderQueue();
+      playTrack(index);
+    };
+
+    const remove=document.createElement('button');
+    remove.textContent='×';
+    remove.onclick=()=>{
+      playQueue.splice(position,1);
+      renderQueue();
+    };
+
+    row.append(info,play,remove);
+    box.append(row);
+  });
+}
+
+function clearQueue(){
+  playQueue=[];
+  renderQueue();
+  toast('Queue cleared.');
+}
+
+function openExpandedPlayer(){
+  document.getElementById('expanded-player').classList.add('open');
+  updateExpandedPlayer();
+}
+
+function closeExpandedPlayer(){
+  document.getElementById('expanded-player').classList.remove('open');
+}
+
+function updateExpandedPlayer(){
+  const track=tracks[currentIndex];
+
+  document.getElementById('expanded-title').textContent=
+    track?track.title:'Choose a track';
+
+  document.getElementById('expanded-subtitle').textContent=
+    track?categoryName(track.category)+' · PULSE PRO':'PULSE MUSIC STUDIO PRO';
+
+  document.getElementById('expanded-art').textContent=
+    track?trackIcon(track.category):'♫';
+
+  document.getElementById('expanded-play').textContent=
+    audio.paused?'▶ Play':'Ⅱ Pause';
+}
+
+// Enhance existing player functions
+const originalPlayTrack=playTrack;
+
+playTrack=function(index){
+  originalPlayTrack(index);
+
+  if(index>=0&&index<tracks.length){
+    addToHistory(index);
+    updateExpandedPlayer();
+  }
+};
+
+const originalNextTrack=nextTrack;
+
+nextTrack=function(){
+  if(playQueue.length){
+    const next=playQueue.shift();
+    renderQueue();
+    playTrack(next);
+    return;
+  }
+
+  originalNextTrack();
+};
+
+audio.addEventListener('play',updateExpandedPlayer);
+audio.addEventListener('pause',updateExpandedPlayer);
+
+// PRO initialization
+renderPlaylists();
+renderPlaylistContent();
+renderHistory();
+renderQueue();
 // VISUAL LAB
 const palettes=[
  ['#9875ff','#65baff','#ff75bd'],
