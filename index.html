@@ -502,482 +502,6 @@ gap:12px
 
 .player-right span{font-size:12px;color:var(--muted)}
 .player-right input{width:85px}
-
-.empty-state{color:var(--muted);font-size:11px;padding:20px 5px}
-
-footer{
-padding:30px 0;
-color:#555a6d;
-font-size:10px;
-text-align:center;
-margin-top:35px
-}
-
-.toast{
-position:fixed;
-bottom:110px;
-right:25px;
-background:#25213a;
-border:1px solid #9875ff66;
-padding:14px 20px;
-border-radius:12px;
-font-size:12px;
-opacity:0;
-transition:.3s;
-pointer-events:none;
-z-index:120
-}
-
-.toast.show{opacity:1}
-
-/* PRO FEATURES */
-
-.pro-tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
-
-.pro-btn{
-background:#ffffff0b;
-border:1px solid var(--border);
-color:#c9c3e8;
-padding:10px 14px;
-border-radius:10px;
-font-size:11px
-}
-
-.pro-btn:hover{background:#9875ff25;border-color:#9875ff80}
-
-.pro-panel{
-background:#12141e;
-border:1px solid var(--border);
-border-radius:16px;
-padding:19px;
-margin-top:17px
-}
-
-.pro-panel h3{font-size:14px;margin-bottom:13px}
-
-.pro-panel-head{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-margin-bottom:13px
-}
-
-.pro-panel-head small{color:var(--muted);font-size:10px}
-
-.pro-playlists{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(145px,1fr));
-gap:10px
-}
-
-.pro-playlist{
-background:var(--panel2);
-padding:14px;
-border-radius:12px;
-border:1px solid var(--border);
-cursor:pointer
-}
-
-.pro-playlist.active{
-border-color:var(--purple);
-background:#9875ff18
-}
-
-.pro-playlist strong{display:block;font-size:11px;margin-top:9px}
-.pro-playlist small{font-size:10px;color:var(--muted)}
-
-.pro-row{
-display:flex;
-align-items:center;
-gap:11px;
-padding:10px;
-border-radius:11px
-}
-
-.pro-row:hover{background:#ffffff09}
-.pro-row-info{flex:1;min-width:0}
-
-.pro-row-info strong{
-display:block;
-font-size:11px;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis
-}
-
-.pro-row-info small{
-display:block;
-color:var(--muted);
-font-size:10px;
-margin-top:5px
-}
-
-.pro-row button{
-background:none;
-border:0;
-color:#c5b5ff;
-font-size:15px;
-padding:5px
-}
-
-.pro-modal{
-position:fixed;
-inset:0;
-background:rgba(5,5,12,.94);
-backdrop-filter:blur(25px);
-z-index:100;
-display:none;
-place-items:center;
-padding:0
-}
-
-.pro-modal.open{display:grid}
-
-.pro-modal-card{
-width:min(1100px,100%);
-height:min(760px,100vh);
-max-height:100vh;
-border:0;
-border-radius:0;
-padding:35px 5%;
-background:
-radial-gradient(ellipse at 20% 10%,#9875ff30,transparent 55%),
-linear-gradient(145deg,#171523,#090a10 65%);
-display:flex;
-flex-direction:column;
-justify-content:center;
-overflow-y:auto;
-text-align:left;
-position:relative
-}
-
-.pro-close{
-position:absolute;
-right:35px;
-top:25px;
-width:42px;
-height:42px;
-border-radius:50%;
-background:#ffffff12;
-border:0;
-color:white;
-font-size:25px;
-z-index:5
-}
-
-.now-top{
-text-align:center;
-color:#bba6ff;
-font-size:10px;
-letter-spacing:4px;
-margin-bottom:35px
-}
-
-.now-layout{
-display:grid;
-grid-template-columns:1.1fr 1fr;
-align-items:center;
-gap:7%;
-max-width:950px;
-width:100%;
-margin:auto
-}
-
-.now-art{
-aspect-ratio:1;
-width:100%;
-max-width:420px;
-margin:auto;
-border-radius:28px;
-display:grid;
-place-items:center;
-position:relative;
-overflow:hidden;
-font-size:100px;
-box-shadow:0 25px 90px #0009;
-isolation:isolate;
-animation:artFloat 6s ease-in-out infinite
-}
-
-.now-art::before,.now-art::after{
-content:"";
-position:absolute;
-border-radius:50%;
-z-index:-1
-}
-
-.now-art::before{
-width:75%;
-height:75%;
-border:1px solid #ffffff35;
-box-shadow:0 0 70px #ffffff25
-}
-
-.now-art::after{
-width:45%;
-height:45%;
-background:#ffffff12;
-filter:blur(25px)
-}
-
-.now-art.vibe-soul-rnb{background:linear-gradient(135deg,#6d397c,#d17aa9,#29204f)}
-.now-art.vibe-late-night{background:linear-gradient(135deg,#111b42,#435b9c,#17152f)}
-.now-art.vibe-ambient-lofi{background:linear-gradient(135deg,#427e91,#9abec4,#35416f)}
-.now-art.vibe-chillhop{background:linear-gradient(135deg,#8b684b,#d6a878,#41334f)}
-.now-art.vibe-activities{background:linear-gradient(135deg,#285b59,#65a99a,#253a62)}
-.now-art.vibe-default{background:linear-gradient(135deg,#7253b9,#9875ff,#263c59)}
-
-@keyframes artFloat{
-0%,100%{transform:translateY(0) rotate(-1deg)}
-50%{transform:translateY(-9px) rotate(1deg)}
-}
-
-.now-info{min-width:0}
-.now-label{color:#bba6ff;font-size:10px;letter-spacing:3px;margin-bottom:18px}
-
-.now-info h2{
-font-size:clamp(27px,4vw,48px);
-line-height:1.1;
-letter-spacing:-1.8px;
-overflow-wrap:anywhere
-}
-
-.now-info p{color:#999bad;font-size:13px;margin-top:13px}
-.now-progress{margin-top:35px}
-.now-progress input{width:100%;margin:12px 0}
-
-.now-times{
-display:flex;
-justify-content:space-between;
-color:#898b9d;
-font-size:10px
-}
-
-.now-controls{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:27px;
-margin-top:27px
-}
-
-.now-controls button{
-background:none;
-border:0;
-color:#eeeafc;
-font-size:23px
-}
-
-.now-controls .now-main{
-width:62px;
-height:62px;
-border-radius:50%;
-background:white;
-color:#111;
-font-size:23px;
-transition:.2s
-}
-
-.now-controls .now-main:hover{transform:scale(1.08)}
-
-.now-volume{
-display:flex;
-align-items:center;
-gap:12px;
-color:#aaa;
-margin-top:28px;
-font-size:13px
-}
-
-.now-volume input{max-width:130px}
-
-.now-footer{
-text-align:center;
-color:#626477;
-font-size:9px;
-letter-spacing:2px;
-margin-top:40px
-}
-
-@media(max-width:900px){
-.sidebar{width:70px;padding:20px 8px}
-.logo{font-size:14px;letter-spacing:2px;padding:10px 4px 35px}
-.side-label,.nav .label,.side-bottom{display:none}
-.nav button{justify-content:center;padding:14px 5px}
-main{margin-left:70px;width:calc(100% - 70px);padding:24px 3% 125px}
-.music-player{left:70px}
-.grid-main{grid-template-columns:1fr}
-}
-
-@media(max-width:700px){
-.pro-modal-card{padding:75px 23px 30px}
-.now-layout{grid-template-columns:1fr;gap:30px}
-.now-art{max-width:250px;font-size:75px}
-.now-info{text-align:center}
-.now-info h2{font-size:28px}
-.now-progress{margin-top:25px}
-.now-controls{gap:22px}
-.now-volume{justify-content:center}
-.now-footer{margin-top:30px}
-}
-
-@media(max-width:650px){
-main{padding:18px 13px 145px}
-.feature-grid{grid-template-columns:repeat(2,1fr)}
-.playlists{grid-template-columns:repeat(2,1fr)}
-.music-hero{padding:20px}
-.music-hero h2{font-size:24px}
-.music-art{width:85px;height:85px;font-size:35px}
-.music-player{grid-template-columns:1fr auto;padding:10px 13px;gap:8px}
-.player-center{grid-column:1/-1;grid-row:2}
-.player-right{grid-column:2;grid-row:1}
-.player-right input,.player-right span{display:none}
-.stats{grid-template-columns:repeat(3,1fr)}
-.stat{padding:11px}
-.stat strong{font-size:18px}
-.timer h2{font-size:58px}
-.track{gap:7px;grid-template-columns:25px 32px minmax(0,1fr) 25px auto}
-.track-cover{width:32px;height:32px}
-.track-actions button{padding:3px;font-size:12px}
-.music-search{max-width:145px}
-}
-</style>
-</head>
-
-<body>
-<div class="layout">
-
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="logo">PUL<span>SE</span></div>
-
-  <div class="side-label">WORKSPACE</div>
-
-  <nav class="nav">
-    <button class="active" data-page="dashboard" onclick="showPage('dashboard',this)">
-      <span class="ico">⌂</span><span class="label">Dashboard</span>
-    </button>
-
-    <button data-page="music" onclick="showPage('music',this)">
-      <span class="ico">♫</span><span class="label">Music Studio</span>
-    </button>
-
-    <button data-page="visual" onclick="showPage('visual',this)">
-      <span class="ico">◈</span><span class="label">Visual Lab</span>
-    </button>
-
-    <button data-page="notes" onclick="showPage('notes',this)">
-      <span class="ico">▤</span><span class="label">Quick Notes</span>
-    </button>
-
-    <button data-page="focus" onclick="showPage('focus',this)">
-      <span class="ico">◷</span><span class="label">Focus Mode</span>
-    </button>
-
-    <button data-page="random" onclick="showPage('random',this)">
-      <span class="ico">✧</span><span class="label">Random Zone</span>
-    </button>
-  </nav>
-
-  <div class="side-bottom">
-    <span class="online">●</span> SYSTEM ONLINE<br>
-    PULSE v2.0 PRO
-  </div>
-</aside>
-
-<!-- MAIN -->
-<main>
-
-<header class="topbar">
-  <div class="greeting">
-    <small id="today-label">YOUR PERSONAL SPACE</small>
-    <h2 id="greeting">Welcome back.</h2>
-  </div>
-  <div class="profile">✦ PULSE MEMBER</div>
-</header>
-
-<!-- DASHBOARD -->
-<section class="page active" id="dashboard">
-
-  <div class="heading">
-    <h1>Your digital life.</h1>
-    <p>A little space for everything that matters.</p>
-  </div>
-
-  <div class="grid grid-main">
-    <div class="card hero-card">
-      <div>
-        <small>YOUR SPACE. YOUR RULES.</small>
-        <h2>Make today<br>count.</h2>
-        <p>Music, creativity, focus and everything in between.</p>
-      </div>
-      <div>
-        <button class="btn" onclick="showPage('music')">Explore PULSE →</button>
-      </div>
-    </div>
-
-    <div class="card clock">
-      <strong id="clock">00:00</strong>
-      <p>YOUR LOCAL TIME</p>
-      <div class="date" id="date">Loading date...</div>
-    </div>
-  </div>
-
-  <div class="stats">
-    <div class="stat">
-      <small>YOUR NOTES</small>
-      <strong id="notes-stat">0</strong>
-    </div>
-    <div class="stat">
-      <small>FOCUS SESSIONS</small>
-      <strong id="sessions-stat">0</strong>
-    </div>
-    <div class="stat">
-      <small>FAVOURITES</small>
-      <strong id="favorites-stat">0</strong>
-    </div>
-  </div>
-
-  <div class="section-gap">
-    <div class="heading">
-      <h1>Explore your space.</h1>
-      <p>Choose what you feel like doing.</p>
-    </div>
-
-    <div class="grid feature-grid">
-      <div class="card feature purple" onclick="showPage('music')">
-        <span class="emoji">🎧</span>
-        <div>
-          <h3>Music Studio</h3>
-          <p>Your soundtrack, your mood.</p>
-        </div>
-      </div>
-
-      <div class="card feature blue" onclick="showPage('visual')">
-        <span class="emoji">🎨</span>
-        <div>
-          <h3>Visual Lab</h3>
-          <p>Create your own atmosphere.</p>
-        </div>
-      </div>
-
-      <div class="card feature pink" onclick="showPage('notes')">
-        <span class="emoji">📝</span>
-        <div>
-          <h3>Quick Notes</h3>
-          <p>Keep your thoughts organised.</p>
-        </div>
-      </div>
-
-      <div class="card feature green" onclick="showPage('focus')">
-        <span class="emoji">⏳</span>
-        <div>
-          <h3>Focus Mode</h3>
-          <p>Time to get things done.</p>
-        </div>
-      </div>
-
       <div class="card feature orange" onclick="showPage('random')">
         <span class="emoji">✨</span>
         <div>
@@ -1113,6 +637,64 @@ main{padding:18px 13px 145px}
       <div class="empty-state">Your queue is empty.</div>
     </div>
 
+  </div>
+
+</section>
+
+<!-- ANALYTICS -->
+<section class="page" id="analytics">
+
+  <div class="heading">
+    <h1>Analytics.</h1>
+    <p>Your activity. Your patterns. Your digital life.</p>
+  </div>
+
+  <div class="stats analytics-stats">
+
+    <div class="stat">
+      <small>TOTAL PLAYS</small>
+      <strong id="analytics-plays">0</strong>
+    </div>
+
+    <div class="stat">
+      <small>LISTENING TIME</small>
+      <strong id="analytics-time">0m</strong>
+    </div>
+
+    <div class="stat">
+      <small>TRACKS DISCOVERED</small>
+      <strong id="analytics-discovered">0</strong>
+    </div>
+
+  </div>
+
+  <div class="grid section-gap">
+
+    <div class="card">
+      <h3>🏆 Most played track</h3>
+      <h2 id="analytics-top-track" style="margin-top:15px">No data yet</h2>
+      <p id="analytics-top-count" style="color:var(--muted);font-size:11px;margin-top:8px">
+        Start listening to discover your favourite.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>🎧 Listening overview</h3>
+      <div id="analytics-genres" style="margin-top:18px">
+        <p class="empty-state">No listening data yet.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card section-gap">
+    <h3>✦ Your PULSE activity</h3>
+    <p style="color:var(--muted);font-size:11px;margin-top:8px">
+      Your personal listening statistics.
+    </p>
+    <div id="analytics-summary" style="margin-top:18px">
+      Start using PULSE to build your statistics.
+    </div>
   </div>
 
 </section>
@@ -1332,32 +914,42 @@ main{padding:18px 13px 145px}
 <div class="toast" id="toast"></div>
 
 <audio id="audio" preload="metadata"></audio>
-<script>
+const genreContainer = $('analytics-genres');
+  genreContainer.replaceChildren();
 
-/* =========================
-   PULSE — CORE SYSTEM
-========================= */
+  if (!genreEntries.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty-state';
+    empty.textContent = 'No listening data yet.';
+    genreContainer.appendChild(empty);
+  } else {
+    genreEntries.forEach(([genre, count]) => {
+      const percentage = Math.round((count / totalGenrePlays) * 100);
+      const item = document.createElement('div');
+      const label = document.createElement('div');
+      label.className = 'analytics-genre-label';
 
-const $ = id => document.getElementById(id);
+      const name = document.createElement('span');
+      name.textContent = genre;
+      const value = document.createElement('span');
+      value.textContent = `${percentage}%`;
+      label.append(name, value);
 
-const audio = $('audio');
+      const bar = document.createElement('div');
+      bar.className = 'analytics-bar';
+      const fill = document.createElement('div');
+      fill.className = 'analytics-bar-fill';
+      fill.style.width = `${percentage}%`;
+      bar.appendChild(fill);
+      item.append(label, bar);
+      genreContainer.appendChild(item);
+    });
+  }
 
-let tracks = [];
-let currentIndex = -1;
-
-let currentGenre = 'all';
-let currentPlaylist = 'all';
-
-let favorites = JSON.parse(localStorage.getItem('pulse-favorites') || '[]');
-let history = JSON.parse(localStorage.getItem('pulse-history') || '[]');
-let playQueue = JSON.parse(localStorage.getItem('pulse-queue') || '[]');
-let customPlaylists = JSON.parse(localStorage.getItem('pulse-playlists') || '[]');
-
-let shuffleEnabled = false;
-let repeatEnabled = false;
-
-let currentTime = 0;
-let audioReady = false;
+  const timeLabel = hours > 0 ? `${hours}h ${minutes}m` : `${minutes} minutes`;
+  $('analytics-summary').textContent =
+    `You have played ${pulseAnalytics.plays} tracks and listened for ${timeLabel}. Keep discovering new music!`;
+}
 
 
 /* =========================
@@ -1555,6 +1147,7 @@ async function loadMusicLibrary() {
     renderHistory();
     renderQueue();
     updateStats();
+    updateAnalytics();
 
   } catch (error) {
     console.error(error);
@@ -1720,11 +1313,18 @@ function playTrack(index) {
 
   if (!track) return;
 
+  lastAnalyticsTime = null;
   audio.src = track.url;
   audio.volume = Number($('volume').value);
 
   audio.play()
     .then(() => {
+      pulseAnalytics.plays++;
+      pulseAnalytics.trackCounts[track.name] =
+        (Number(pulseAnalytics.trackCounts[track.name]) || 0) + 1;
+      saveAnalytics();
+      updateAnalytics();
+
       updatePlayer();
       addToHistory(index);
       renderTracks();
@@ -1874,8 +1474,362 @@ audio.addEventListener('timeupdate', () => {
 
   $('expanded-current-time').textContent = formatTime(current);
   $('expanded-duration').textContent = formatTime(duration);
+
+  if (!audio.paused) {
+    if (lastAnalyticsTime !== null) {
+      const delta = current - lastAnalyticsTime;
+
+      if (delta > 0 && delta < 3) {
+        pulseAnalytics.listeningSeconds += delta;
+        saveAnalytics();
+        updateAnalytics();
+      }
+    }
+
+    lastAnalyticsTime = current;
+  }
 });
 
+
+audio.addEventListener('seeking', () => {
+  lastAnalyticsTime = null;
+});
+
+
+audio.addEventListener('loadedmetadata', () => {
+  $('duration').textContent = formatTime(audio.duration);
+  $('expanded-duration').textContent = formatTime(audio.duration);
+});
+
+
+function seekAudio(value) {
+  if (!audio.duration) return;
+
+  lastAnalyticsTime = null;
+  audio.currentTime = (Number(value) / 100) * audio.duration;
+}
+
+
+function changeVolume(value) {
+  const volume = Math.max(0, Math.min(1, Number(value)));
+
+  audio.volume = volume;
+
+  $('volume').value = volume;
+  $('expanded-volume').value = volume;
+}
+
+
+/* =========================
+   FAVOURITES
+========================= */
+
+function saveFavorites() {
+  localStorage.setItem('pulse-favorites', JSON.stringify(favorites));
+}
+
+
+function toggleFavorite(index) {
+  if (favorites.includes(index)) {
+    favorites = favorites.filter(item => item !== index);
+    toast('Removed from favourites.');
+  } else {
+    favorites.push(index);
+    toast('Added to favourites ♥');
+  }
+
+  saveFavorites();
+
+  renderTracks();
+  renderFavorites();
+  updatePlayer();
+  updateStats();
+}
+
+
+function toggleCurrentFavorite() {
+  if (currentIndex === -1) {
+    toast('Choose a track first.');
+    return;
+  }
+
+  toggleFavorite(currentIndex);
+}
+
+
+function renderFavorites() {
+  const container = $('favorites-list');
+
+  if (!container) return;
+
+  const valid = favorites.filter(index => tracks[index]);
+
+  $('favorite-count').textContent =
+    `${valid.length} tracks`;
+
+  if (!valid.length) {
+    container.innerHTML =
+      '<div class="empty-state">Your favourite tracks will appear here.</div>';
+    return;
+  }
+
+  container.innerHTML = valid.map(index => {
+    const track = tracks[index];
+
+    return `
+      <div class="track" style="grid-template-columns:38px minmax(0,1fr) 35px 35px">
+
+        <div class="track-cover">${categoryEmoji(track.category)}</div>
+
+        <div style="min-width:0">
+          <div class="track-name">${escapeHTML(track.name)}</div>
+          <div class="track-meta">YOUR FAVOURITE</div>
+        </div>
+
+        <button class="track-play" onclick="playTrack(${index})">▶</button>
+
+        <button class="track-fav liked"
+          onclick="toggleFavorite(${index})">♥</button>
+
+      </div>
+    `;
+  }).join('');
+}
+
+
+/* =========================
+   LISTENING HISTORY
+========================= */
+
+function addToHistory(index) {
+  if (!tracks[index]) return;
+
+  if (history[0] === index) return;
+
+  history = history.filter(item => item !== index);
+
+  history.unshift(index);
+
+  history = history.slice(0, 12);
+
+  localStorage.setItem('pulse-history', JSON.stringify(history));
+
+  renderHistory();
+}
+
+
+function renderHistory() {
+  const container = $('history-list');
+
+  if (!container) return;
+
+  const valid = history.filter(index => tracks[index]);
+
+  if (!valid.length) {
+    container.innerHTML =
+      '<div class="empty-state">Your listening history will appear here.</div>';
+    return;
+  }
+
+  container.innerHTML = valid.map(index => {
+    const track = tracks[index];
+
+    return `
+      <div class="pro-row">
+
+        <div class="track-cover">${categoryEmoji(track.category)}</div>
+
+        <div class="pro-row-info">
+          <strong>${escapeHTML(track.name)}</strong>
+          <small>Recently played</small>
+        </div>
+
+        <button onclick="playTrack(${index})">▶</button>
+
+      </div>
+    `;
+  }).join('');
+}
+
+
+/* =========================
+   QUEUE
+========================= */
+
+function saveQueue() {
+  localStorage.setItem('pulse-queue', JSON.stringify(playQueue));
+}
+
+
+function addToQueue(index) {
+  if (!tracks[index]) return;
+
+  playQueue.push(index);
+
+  saveQueue();
+  renderQueue();
+
+  toast('Added to Up Next.');
+}
+
+
+function addCurrentToQueue() {
+  if (currentIndex === -1) {
+    toast('Choose a track first.');
+    return;
+  }
+
+  addToQueue(currentIndex);
+}
+
+
+function clearQueue() {
+  playQueue = [];
+
+  saveQueue();
+  renderQueue();
+
+  toast('Queue cleared.');
+}
+
+
+function playQueuedTrack(position) {
+  const index = playQueue[position];
+
+  if (index === undefined) return;
+
+  playQueue.splice(position, 1);
+
+  saveQueue();
+  renderQueue();
+
+  playTrack(index);
+}
+
+
+function renderQueue() {
+  const container = $('queue-list');
+
+  if (!container) return;
+
+  const valid = playQueue
+    .map((index, position) => ({ index, position }))
+    .filter(item => tracks[item.index]);
+
+  if (!valid.length) {
+    container.innerHTML =
+      '<div class="empty-state">Your queue is empty. Add tracks using the + button.</div>';
+    return;
+  }
+
+  container.innerHTML = valid.map(item => {
+    const track = tracks[item.index];
+
+    return `
+      <div class="pro-row">
+
+        <div class="track-cover">${categoryEmoji(track.category)}</div>
+
+        <div class="pro-row-info">
+          <strong>${escapeHTML(track.name)}</strong>
+          <small>Up Next</small>
+        </div>
+
+        <button onclick="playQueuedTrack(${item.position})">▶</button>
+
+        <button onclick="removeFromQueue(${item.position})">×</button>
+
+      </div>
+    `;
+  }).join('');
+}
+
+
+function removeFromQueue(position) {
+  playQueue.splice(position, 1);
+
+  saveQueue();
+  renderQueue();
+}
+  $('bottom-fav').textContent =
+    favorites.includes(currentIndex) ? '♥' : '♡';
+
+  $('bottom-fav').classList.toggle(
+    'liked',
+    favorites.includes(currentIndex)
+  );
+
+  $('expanded-play').textContent = audio.paused ? '▶' : 'Ⅱ';
+
+  $('expanded-fav').textContent =
+    favorites.includes(currentIndex) ? '♥ Favourited' : '♡ Favourite';
+}
+
+
+audio.addEventListener('play', () => {
+  updatePlayer();
+  renderTracks();
+});
+
+audio.addEventListener('pause', () => {
+  updatePlayer();
+  renderTracks();
+});
+
+audio.addEventListener('ended', () => {
+  nextTrack();
+});
+
+
+/* =========================
+   PROGRESS + TIME
+========================= */
+
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return '0:00';
+
+  const minutes = Math.floor(seconds / 60);
+  const remaining = Math.floor(seconds % 60);
+
+  return `${minutes}:${String(remaining).padStart(2, '0')}`;
+}
+
+
+audio.addEventListener('timeupdate', () => {
+  const duration = audio.duration || 0;
+  const current = audio.currentTime || 0;
+
+  const progress = duration ? (current / duration) * 100 : 0;
+
+  $('seek').value = progress;
+  $('expanded-progress').value = progress;
+
+  $('current-time').textContent = formatTime(current);
+  $('duration').textContent = formatTime(duration);
+
+  $('expanded-current-time').textContent = formatTime(current);
+  $('expanded-duration').textContent = formatTime(duration);
+
+  if (!audio.paused && !audio.ended) {
+    if (lastAnalyticsTime !== null) {
+      const delta = current - lastAnalyticsTime;
+      if (delta > 0 && delta < 3) {
+        pulseAnalytics.listeningSeconds += delta;
+        saveAnalytics();
+        updateAnalytics();
+      }
+    }
+    lastAnalyticsTime = current;
+  }
+});
+
+audio.addEventListener('pause', () => {
+  lastAnalyticsTime = null;
+});
+
+audio.addEventListener('seeking', () => {
+  lastAnalyticsTime = null;
+});
 
 audio.addEventListener('loadedmetadata', () => {
   $('duration').textContent = formatTime(audio.duration);
@@ -2123,8 +2077,6 @@ function renderQueue() {
     `;
   }).join('');
 }
-
-
 function removeFromQueue(position) {
   playQueue.splice(position, 1);
 
@@ -2497,7 +2449,6 @@ function startTimer() {
 
 function stopTimer() {
   clearInterval(timerInterval);
-
   timerInterval = null;
   timerRunning = false;
 
@@ -2541,8 +2492,6 @@ function completeTimer() {
 }
 
 updateTimerDisplay();
-
-
 /* =========================
    VISUAL LAB
 ========================= */
@@ -2761,6 +2710,7 @@ renderFavorites();
 renderCustomPlaylists();
 
 updateStats();
+updateAnalytics();
 
 console.log('PULSE is ready. ✦');
 
